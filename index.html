@@ -410,15 +410,25 @@
     });
 
     // Покупка
-    document.getElementById("unlock-btn").addEventListener("click", () => {
-      if (tg?.showAlert) {
-        tg.showAlert("Для разблокировки будет сформирован счет через Telegram Stars.");
+      document.getElementById("unlock-btn").addEventListener("click", () => {
+      const invoiceUrl = "https://t.me/$hG3quZ4aUUkNGwAAygHU14LMJyg";
+
+      if (tg?.openInvoice) {
+        tg.openInvoice(invoiceUrl, function(status) {
+          if (status === "paid") {
+            if (tg?.HapticFeedback) {
+              tg.HapticFeedback.notificationOccurred("success");
+            }
+            document.querySelector(".locked-box").innerHTML = `
+              <div style="color: #4ade80; font-weight: bold; font-size: 16px; margin-bottom: 8px;">✅ Доступ успешно открыт!</div>
+              <p style="font-size: 14px; color: #f3f4f6; text-align: left; line-height: 1.5;">
+                Ваш архетип идеально гармонирует с типами «Искатель» и «Наставник». Конфликты возникают преимущественно при нарушении личных границ и неопределённости.
+              </p>
+            `;
+          }
+        });
       } else {
-        alert("Оплата Stars: подключение к боту.");
+        window.location.href = invoiceUrl;
       }
     });
-
-    renderQuestion();
-  </script>
-</body>
-</html>
+    
