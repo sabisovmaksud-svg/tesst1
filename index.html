@@ -14,6 +14,7 @@
       --text: #f3f4f6;
       --subtext: #9ca3af;
       --border: #262b3d;
+      --channel: #229ed9;
     }
     * {
       box-sizing: border-box;
@@ -148,13 +149,64 @@
       background: linear-gradient(90deg, var(--primary), var(--accent));
       border-radius: 4px;
     }
+    .btn-send {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: #2563eb;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .channel-box {
+      background: rgba(34, 158, 217, 0.08);
+      border: 1px solid rgba(34, 158, 217, 0.3);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      margin-top: 8px;
+    }
+    .channel-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-bottom: 4px;
+    }
+    .channel-desc {
+      font-size: 13px;
+      color: var(--subtext);
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+    .channel-btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #0284c7;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
     .locked-box {
       background: linear-gradient(180deg, rgba(21, 24, 36, 0.6) 0%, rgba(139, 92, 246, 0.1) 100%);
       border: 1px dashed var(--primary);
       border-radius: 14px;
       padding: 18px;
       text-align: center;
-      margin-top: 10px;
+      margin-top: 8px;
     }
     .locked-title {
       font-size: 16px;
@@ -184,9 +236,6 @@
       gap: 8px;
       box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
     }
-    .pay-btn:active {
-      transform: scale(0.98);
-    }
   </style>
 </head>
 <body>
@@ -200,7 +249,7 @@
       <div class="progress-bar-wrap">
         <div class="progress-bar" id="progress"></div>
       </div>
-      <div class="question-title" id="question-text">Загрузка вопроса...</div>
+      <div class="question-title" id="question-text">Загрузка...</div>
       <div class="options" id="options-box"></div>
     </div>
 
@@ -225,9 +274,21 @@
         </div>
       </div>
 
+      <button class="btn-send" id="send-chat-btn">
+        <span>💬 Отправить результат в диалог</span>
+      </button>
+
+      <div class="channel-box">
+        <div class="channel-title">📢 Наш Telegram-канал</div>
+        <div class="channel-desc">Подпишитесь, чтобы читать подробные разборы психотипов и свежие тесты каждый день.</div>
+        <button class="channel-btn" id="channel-btn">
+          <span>Подписаться на канал</span>
+        </button>
+      </div>
+
       <div class="locked-box">
-        <div class="locked-title">🔒 Полная расшифровка и список совместимости</div>
-        <div class="locked-desc">Узнайте, какие знаки и типы личности идеально подходят вам для отношений и почему возникают скрытые конфликты.</div>
+        <div class="locked-title">🔒 Полная расшифровка и совместимость</div>
+        <div class="locked-desc">Узнайте, какие типы личности подходят вам для гармоничных отношений.</div>
         <button class="pay-btn" id="unlock-btn">
           <span>Разблокировать разбор</span>
           <span>⭐️ 50 Stars</span>
@@ -242,6 +303,9 @@
       tg.ready();
       tg.expand();
     }
+
+    // Замените на юзернейм вашего канала без символа @
+    const CHANNEL_USERNAME = "vashpsiho"; 
 
     const questions = [
       {
@@ -317,6 +381,35 @@
       }
     }
 
+    // Переход в канал
+    document.getElementById("channel-btn").addEventListener("click", () => {
+      const url = `https://t.me/${CHANNEL_USERNAME}`;
+      if (tg?.openTelegramLink) {
+        tg.openTelegramLink(url);
+      } else {
+        window.location.href = url;
+      }
+    });
+
+    // Отправка карточки в чат
+    document.getElementById("send-chat-btn").addEventListener("click", () => {
+      const shareText = encodeURIComponent(
+        "🔮 Мой результат психологического теста:\n\n" +
+        "Архетип: Аналитик-Стратег\n" +
+        "• Эмоциональная глубина: 84%\n" +
+        "• Интуитивная совместимость: 91%\n" +
+        "• Доминантность архетипа: 76%\n\n" +
+        "Пройти тест в боте: @soul_type_bot"
+      );
+      const shareUrl = `https://t.me/share/url?url=&text=${shareText}`;
+      if (tg?.openTelegramLink) {
+        tg.openTelegramLink(shareUrl);
+      } else {
+        window.location.href = shareUrl;
+      }
+    });
+
+    // Покупка
     document.getElementById("unlock-btn").addEventListener("click", () => {
       if (tg?.showAlert) {
         tg.showAlert("Для разблокировки будет сформирован счет через Telegram Stars.");
