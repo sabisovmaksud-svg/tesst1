@@ -14,7 +14,6 @@
       --text: #f3f4f6;
       --subtext: #9ca3af;
       --border: #262b3d;
-      --channel: #229ed9;
     }
     * {
       box-sizing: border-box;
@@ -304,8 +303,8 @@
       tg.expand();
     }
 
-    // Замените на юзернейм вашего канала без символа @
-    const CHANNEL_USERNAME = "t.me/vashpsiho"; 
+    const CHANNEL_USERNAME = "vashpsiho";
+    const INVOICE_URL = "https://t.me/$hG3quZ4aUUkNGwAAygHU14LMJyg";
 
     const questions = [
       {
@@ -381,7 +380,7 @@
       }
     }
 
-    // Переход в канал
+    // Подписка на канал
     document.getElementById("channel-btn").addEventListener("click", () => {
       const url = `https://t.me/${CHANNEL_USERNAME}`;
       if (tg?.openTelegramLink) {
@@ -391,7 +390,7 @@
       }
     });
 
-    // Отправка карточки в чат
+    // Отправка в диалог
     document.getElementById("send-chat-btn").addEventListener("click", () => {
       const shareText = encodeURIComponent(
         "🔮 Мой результат психологического теста:\n\n" +
@@ -409,12 +408,10 @@
       }
     });
 
-    // Покупка
-      document.getElementById("unlock-btn").addEventListener("click", () => {
-      const invoiceUrl = "https://t.me/$hG3quZ4aUUkNGwAAygHU14LMJyg";
-
+    // Оплата Stars
+    document.getElementById("unlock-btn").addEventListener("click", () => {
       if (tg?.openInvoice) {
-        tg.openInvoice(invoiceUrl, function(status) {
+        tg.openInvoice(INVOICE_URL, function(status) {
           if (status === "paid") {
             if (tg?.HapticFeedback) {
               tg.HapticFeedback.notificationOccurred("success");
@@ -428,7 +425,11 @@
           }
         });
       } else {
-        window.location.href = invoiceUrl;
+        window.location.href = INVOICE_URL;
       }
     });
-    
+
+    renderQuestion();
+  </script>
+</body>
+</html>
